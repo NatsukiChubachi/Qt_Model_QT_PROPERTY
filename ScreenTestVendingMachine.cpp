@@ -39,6 +39,16 @@ QString ScreenTestVendingMachine::initialize( void )
  */
 QString ScreenTestVendingMachine::clickedButtonCancel()
 {
+    // 現在値が既に0の場合は処理しない
+    // 初回のクリア処理の考慮
+    if ( this->_nowValue == 0 ) {
+        // アイドル状態へ遷移
+        this->_execState = ExecState::Idle;
+        emit this->sigChangedExecState();
+
+        return QString( "%1" ).arg( this->_nowValue );
+    }
+
     // 実行状態の更新と通知
     // キャンセル状態へ遷移
     this->_execState = ExecState::Cancel;
@@ -50,7 +60,8 @@ QString ScreenTestVendingMachine::clickedButtonCancel()
     // QTimerのsingleShotを使用して3秒後に呼ばれる処理を作成する
     QTimer::singleShot( 3000, this, [&]() {
         // 実行状態の更新と通知
-        // キャンセル状態からアイドル状態へ遷移
+
+        // アイドル状態へ遷移
         this->_execState = ExecState::Idle;
         emit this->sigChangedExecState();
     });
@@ -99,10 +110,19 @@ QString ScreenTestVendingMachine::clickedButtonMerchandise( int price )
 
     // QTimerのsingleShotを使用して3秒後に呼ばれる処理を作成する
     QTimer::singleShot( 3000, this, [&]() {
+
         // 実行状態の更新と通知
-        // キャンセル状態からアイドル状態へ遷移
-        this->_execState = ExecState::Idle;
-        emit this->sigChangedExecState();
+        if ( this->_nowValue == 0 ) {
+
+            // アイドル状態へ遷移
+            this->_execState = ExecState::Idle;
+            emit this->sigChangedExecState();
+        } else {
+
+            // 購入中状態へ遷移
+            this->_execState = ExecState::Depositing;
+            emit this->sigChangedExecState();
+        }
     });
 
     // 更新した現在値をreturnする

@@ -17,10 +17,10 @@ Rectangle {
 
     // 商品リスト (text:表示文言, price:値段)
     property var merchandiseList: [
-        { "text": "商品A\n100縁", "price": 100 },
-        { "text": "商品B\n150縁", "price": 150 },
-        { "text": "商品C\n200縁", "price": 200 },
-        { "text": "商品D\n500縁", "price": 500 }
+        { "text": "商品A\n100円", "price": 100 },
+        { "text": "商品B\n150円", "price": 150 },
+        { "text": "商品C\n200円", "price": 200 },
+        { "text": "商品D\n500円", "price": 500 }
     ]
 
     // 画面作成時に実行されるComponent.onCompleted
@@ -28,6 +28,7 @@ Rectangle {
 
         // Modelのinitialize関数を呼び出し現在値を初期化する
         // 初期化した現在値の値をLabelへ反映する
+        console.log( "初期化処理" );
         var value = _model.initialize();
         _lbl_nowValue.text = value;
     }
@@ -93,6 +94,7 @@ Rectangle {
         // ボタン押下時の動作呼び出し
         onClicked: {
 
+            console.log( "取消ボタン押下" );
             _lbl_nowValue.text = _model.clickedButtonCancel();
         }
     }
@@ -122,7 +124,7 @@ Rectangle {
                 // ボタン押下時の動作呼び出し
                 onClicked: {
 
-                    // console.log( coinList[ index ].price );
+                    console.log( "入金ボタン押下" );
                     _lbl_nowValue.text = _model.clickedButtonCoin( coinList[ index ].price );
                 }
             }
@@ -149,16 +151,46 @@ Rectangle {
                 palette.buttonText: "#000000"
                 text: merchandiseList[ index ].text
 
-                // アイドル状態かつ現在金額で購入可能な場合のみ活性、それ以外は非活性
-                enabled: ( _model.execState === 1 && Number( _lbl_nowValue ) >= merchandiseList[ index ].price ) ? true : false
+                // 入金中状態かつ現在金額で購入可能な場合のみ活性、それ以外は非活性
+                enabled: ( _model.execState === 2 && Number( _lbl_nowValue.text ) >= merchandiseList[ index ].price ) ? true : false
 
                 // ボタン押下時の動作呼び出し
                 onClicked: {
 
-                    // console.log( merchandiseList[ index ].price );
+                    console.log( "商品ボタン押下" );
                     _lbl_nowValue.text = _model.clickedButtonMerchandise( merchandiseList[ index ].price );
                 }
             }
+        }
+    }
+
+    // 状態値表示領域
+    Rectangle {
+        color: "#FFFFFF"
+        border.color: "#000000"
+        border.width: 2
+
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+
+        height: 24
+
+        Label {
+            id: _lbl_execState
+
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+
+            font.pixelSize: 12
+            color: "#000000"
+
+            // 「状態値」の値
+            text: "状態値: " + _model.execState
         }
     }
 }
