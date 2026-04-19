@@ -28,7 +28,7 @@ title: 状態遷移図
 config:
   theme: neutral
 ---
-graph LR
+graph TD
     Start((" ")) --> A[初期化状態]
     A -- 初期化完了 --> B[アイドル状態]
     B -- 現在金額が0以上 --> C[入金中状態]
