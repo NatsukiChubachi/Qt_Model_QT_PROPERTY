@@ -249,3 +249,105 @@ sequenceDiagram
 [目次へ](#目次)
 
 -----
+
+## Q_INVOKABLE使用ケース
+
+```mermaid
+---
+title: Q_INVOKABLE使用ケース
+config:
+  theme: neutral
+---
+sequenceDiagram
+    participant View
+    participant Model
+
+    activate View
+    note over View: 何かしらの操作
+    View->>Model: 機能の呼び出し<br>Q_INVOKABLE関数
+
+    deactivate View
+    activate Model
+    note over Model: 機能の処理
+
+    Model->>View: return 結果値
+    deactivate Model
+    activate View
+
+    note over View: 結果を画面へ反映
+    note over View: 処理完了
+    deactivate View
+```
+
+<br>
+<br>
+
+[目次へ](#目次)
+
+-----
+
+## Q_PROPERTY使用ケース
+
+```mermaid
+---
+title: Q_PROPERTY使用ケース
+config:
+  theme: neutral
+---
+sequenceDiagram
+    participant View
+    participant Model
+
+    activate Model
+    note over Model: 状態値の更新
+    
+    Model-->>View: 状態変化通知<br>Q_PROPERTYの<br>プロパティバインディング
+    deactivate Model
+    activate View
+
+    note over View: 通知された状態を<br>画面へ反映
+    note over View: 処理完了
+    deactivate View
+```
+
+<br>
+<br>
+
+[目次へ](#目次)
+
+-----
+
+## signal使用ケース
+
+```mermaid
+---
+title: signal通知使用ケース
+config:
+  theme: neutral
+---
+sequenceDiagram
+    participant View
+    participant Model
+    participant Other
+
+    activate Other
+    note over Other: 非同期の処理
+    Other-->>Model: 処理完了の通知
+
+    deactivate Other
+    activate Model
+    note over Model: 処理完了の<br>コールバック処理
+    
+    Model-->>View: 処理完了の<br>signal通知
+    deactivate Model
+    activate View
+
+    note over View: 通知された状態を<br>画面へ反映
+    note over View: 処理完了
+    deactivate View
+```
+
+<br>
+<br>
+
+[目次へ](#目次)
